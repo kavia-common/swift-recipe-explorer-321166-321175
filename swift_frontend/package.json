@@ -1,0 +1,12 @@
+{
+  "name": "swift-frontend-static",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "echo \"Build handled by swift/.init scripts\"",
+    "serve": "./node_modules/.bin/serve -s ./public -l 8080"
+  },
+  "devDependencies": {
+    "serve": "14.0.1"
+  }
+}
