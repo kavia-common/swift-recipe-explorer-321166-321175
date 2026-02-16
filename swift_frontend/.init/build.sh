@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+WS="/home/kavia/workspace/code-generation/swift-recipe-explorer-321166-321175/swift_frontend"
+cd "$WS"
+# Ensure swift on PATH (if installed to /opt/swift by earlier step)
+if ! command -v swift >/dev/null 2>&1; then export PATH="/opt/swift/usr/bin:$PATH"; fi
+swift build -c release || { echo "swift build failed" >&2; exit 30; }
+# Optional WASM build via carton if requested and available
+if [ "${BUILD_WASM:-0}" = "1" ]; then
+  if command -v carton >/dev/null 2>&1; then
+    mkdir -p public
+    carton build --release --output public || { echo "carton build failed" >&2; exit 31; }
+  else
+    echo "carton not installed; skipping WASM build" >&2
+  fi
+fi
+# ensure public exists and has index.html
+mkdir -p public
+if [ ! -f public/index.html ]; then
+  cat > public/index.html <<'HT'
+<!doctype html><meta charset="utf-8"><title>swift_frontend</title><h1>swift_frontend OK</h1>
+HT
+fi
